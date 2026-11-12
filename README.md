@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # pytest-infra-portfolio
 
 A from-scratch pytest framework that demonstrates patterns used when validating deployed infrastructure. The system under test is a small in-memory HTTP service, so everything runs offline.
@@ -29,3 +30,6 @@ TARGET_BASE_URL=https://host pytest # test an external service
 ## Design notes
 - `pytest.ini` holds stable defaults; CI passes per-run options (report paths, `-m`). Command-line options override `addopts`, and `--cov` options append, so they are not duplicated.
 - The JUnit ANSI strip resolves relative paths against `config.invocation_params.dir`, because `--junitxml` is relative to where pytest was launched, not `rootdir`.
+=======
+# pytest-infra-portfolio
+>>>>>>> cec6efad3c46a041f8a11b0ac8bcbb4b719d1ff1
