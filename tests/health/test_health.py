@@ -3,12 +3,11 @@ import time
 
 import pytest
 
-from framework.helpers import fail_on_exception, log_fail, log_pass
+from framework.helpers import log_fail, log_pass
 
 MAX_LATENCY_SECONDS = 1.0
 
 
-@fail_on_exception
 @pytest.mark.health
 @pytest.mark.smoketests
 def test_TC001_service_reachable(ensure_service_ready):
@@ -21,7 +20,6 @@ def test_TC001_service_reachable(ensure_service_ready):
         pytest.fail(f"Expected 200, got {resp.status_code}")
 
 
-@fail_on_exception
 @pytest.mark.health
 @pytest.mark.smoketests
 def test_TC002_health_payload_ok(ensure_service_ready):
@@ -31,7 +29,6 @@ def test_TC002_health_payload_ok(ensure_service_ready):
     log_pass("Health payload OK")
 
 
-@fail_on_exception
 @pytest.mark.health
 @pytest.mark.smoketests
 @pytest.mark.parametrize("path", ["/health", "/items"])

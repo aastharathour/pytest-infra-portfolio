@@ -9,7 +9,9 @@ A from-scratch pytest framework that demonstrates patterns used when validating 
 | Config: `addopts`, registered markers, live logging | `pytest.ini` |
 | Hooks (`pytest_configure`, `pytest_collection_modifyitems`, `pytest_sessionfinish`) | `conftest.py` |
 | Fixture chain, scopes, `yield` teardown, guard fixture, isolation fixture | `tests/conftest.py` |
-| Helpers: decorator, standard log lines | `framework/helpers.py` |
+| Helpers: standard log lines, env access | `framework/helpers.py` |
+| Central unexpected-error reporting hook (tests and fixtures) | `framework/error_reporting.py` |
+| Testing the framework itself with `pytester` | `tests/hooks` |
 | Markers, `-m` selection, parametrization with ids | `tests/health`, `tests/api` |
 | Ordered scenarios with `pytest-dependency` | `tests/lifecycle` |
 | Env-driven auto-skip (`TARGET_MODE=local`) | `conftest.py` |
@@ -28,6 +30,7 @@ TARGET_BASE_URL=https://host pytest # test an external service
 ```
 
 ## Design notes
+- Unexpected errors are reported by a `pytest_runtest_makereport` hook, not a per-test decorator. pytest already fails the test; the hook adds a standard log line and an "Unexpected error" report section, keeps the original traceback, and also covers fixture errors.
 - `pytest.ini` holds stable defaults; CI passes per-run options (report paths, `-m`). Command-line options override `addopts`, and `--cov` options append, so they are not duplicated.
 - The JUnit ANSI strip resolves relative paths against `config.invocation_params.dir`, because `--junitxml` is relative to where pytest was launched, not `rootdir`.
 =======

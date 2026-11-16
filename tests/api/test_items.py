@@ -1,10 +1,9 @@
 """CRUD behaviour with per-test isolation via the clean_state fixture."""
 import pytest
 
-from framework.helpers import fail_on_exception, log_pass
+from framework.helpers import log_pass
 
 
-@fail_on_exception
 @pytest.mark.crud
 @pytest.mark.smoketests
 def test_TC010_items_empty_initially(clean_state):
@@ -13,7 +12,6 @@ def test_TC010_items_empty_initially(clean_state):
     log_pass("Item list empty after reset")
 
 
-@fail_on_exception
 @pytest.mark.crud
 def test_TC011_create_item(clean_state):
     """[TC-011] POST /items returns 201 with the new item."""
@@ -23,7 +21,6 @@ def test_TC011_create_item(clean_state):
     log_pass("Item created")
 
 
-@fail_on_exception
 @pytest.mark.crud
 def test_TC012_get_created_item(clean_state):
     """[TC-012] A created item can be fetched by id."""
@@ -33,14 +30,12 @@ def test_TC012_get_created_item(clean_state):
     assert fetched.json()["name"] == "gadget"
 
 
-@fail_on_exception
 @pytest.mark.crud
 def test_TC013_missing_item_returns_404(clean_state):
     """[TC-013] Unknown ids return 404."""
     assert clean_state.get("/items/999").status_code == 404
 
 
-@fail_on_exception
 @pytest.mark.crud
 @pytest.mark.parametrize(
     "payload",

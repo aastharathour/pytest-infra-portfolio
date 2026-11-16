@@ -4,12 +4,10 @@ If a step fails, later steps are skipped instead of producing noisy failures.
 """
 import pytest
 
-from framework.helpers import fail_on_exception
 
 _state: dict = {}
 
 
-@fail_on_exception
 @pytest.mark.lifecycle
 @pytest.mark.dependency(name="create")
 def test_TC020_create(clean_state):
@@ -19,7 +17,6 @@ def test_TC020_create(clean_state):
     _state["id"] = resp.json()["id"]
 
 
-@fail_on_exception
 @pytest.mark.lifecycle
 @pytest.mark.dependency(name="read", depends=["create"])
 def test_TC021_read(ensure_service_ready):
@@ -27,7 +24,6 @@ def test_TC021_read(ensure_service_ready):
     assert ensure_service_ready.get(f"/items/{_state['id']}").status_code == 200
 
 
-@fail_on_exception
 @pytest.mark.lifecycle
 @pytest.mark.dependency(name="delete", depends=["read"])
 def test_TC022_delete(ensure_service_ready):
@@ -35,7 +31,6 @@ def test_TC022_delete(ensure_service_ready):
     assert ensure_service_ready.delete(f"/items/{_state['id']}").status_code == 204
 
 
-@fail_on_exception
 @pytest.mark.lifecycle
 @pytest.mark.dependency(depends=["delete"])
 def test_TC023_gone_after_delete(ensure_service_ready):

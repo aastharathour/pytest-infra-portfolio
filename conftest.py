@@ -10,6 +10,8 @@ import re
 
 import pytest
 
+pytest_plugins = ["pytester", "framework.error_reporting"]
+
 _TC_RE = re.compile(r"test_TC(\d+)_", re.IGNORECASE)
 _ANSI_RE = re.compile(r"\x1b(?:[@-Z\\-_]|\[[0-9;]*[ -/]*[@-~])")
 
