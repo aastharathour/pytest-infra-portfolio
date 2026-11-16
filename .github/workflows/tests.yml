@@ -14,13 +14,18 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Run smoke tests
+      - name: Smoke tests (fast gate)
+        env:
+          TARGET_MODE: local
+        run: python -m pytest -m smoketests -q
+      - name: Full suite with reports
         env:
           TARGET_MODE: local
         run: >
-          python -m pytest -m smoketests
+          python -m pytest
           --junitxml=reports/junit.xml
           --cov=framework --cov-report=xml:reports/coverage.xml --cov-report=term
+          --cov-fail-under=80
           --html=reports/report.html --self-contained-html
       - uses: actions/upload-artifact@v4
         if: always()
