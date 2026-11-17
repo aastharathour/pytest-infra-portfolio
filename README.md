@@ -38,7 +38,7 @@ TARGET_BASE_URL=https://host pytest   # test an external service instead of the 
 ```
 On Windows PowerShell set variables with `$env:TARGET_MODE="local"; pytest`.
 
-Expected result: all tests pass; `test_TC004` is skipped only when `TARGET_MODE=local`.
+Expected result: run with `TARGET_MODE=local` (as CI does) to get 25 passed, 1 skipped, 2 reruns. Without it, `test_TC004` runs and fails on purpose, because the local mock serves plain HTTP and that test requires HTTPS.
 
 ## Project layout
 ```
@@ -137,7 +137,7 @@ It replaces a per-test `@fail_on_exception` decorator. pytest already fails a te
 | TC001 | health | `/health` returns 200 | smoke, `log_pass/log_fail` |
 | TC002 | health | payload `status == "ok"` | assert with message |
 | TC003 | health | `/health` and `/items` respond under 1 s | `parametrize`, `time.perf_counter` |
-| TC004 | health | remote deployment serves HTTPS | `remote_only`, skipped in local mode |
+| TC004 | health | remote deployment serves HTTPS | `remote_only`: skipped when `TARGET_MODE=local`, fails against the plain-HTTP mock otherwise |
 | TC010 | api | list is empty after reset | isolation fixture |
 | TC011 | api | POST returns 201 and `{"id": 1, "name": "widget"}` | status plus body |
 | TC012 | api | created item can be fetched | create-then-read |
