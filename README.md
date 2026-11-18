@@ -162,6 +162,22 @@ Notes:
 
 This mirrors a real pre/post-deployment pipeline: a cheap gate first, then the full suite, with machine-readable reports for dashboards.
 
+## Azure DevOps pipeline
+`azure-pipelines.yml` is the same flow expressed for Azure DevOps, so the project can be shown on either platform. It has not been run against a live ADO organisation; to try it, create a project, then Pipelines > New pipeline > GitHub (or Azure Repos Git) > "Existing Azure Pipelines YAML file" > `/azure-pipelines.yml`.
+
+| Concept | GitHub Actions | Azure DevOps |
+|---|---|---|
+| Trigger | `on: push / pull_request` | `trigger:` and `pr:` |
+| Agent | `runs-on: ubuntu-latest` | `pool: vmImage: ubuntu-latest` (Microsoft-hosted) |
+| Gate ordering | steps in one job | **stages**: `Smoke`, then `Full` with `dependsOn` |
+| Python setup | `actions/setup-python` | `UsePythonVersion@0` |
+| Test results tab | none (artifact only) | `PublishTestResults@2` reads the JUnit XML |
+| Coverage tab | none | `PublishCodeCoverageResults@2` reads the Cobertura XML |
+| Always upload reports | `if: always()` | `condition: always()` / `succeededOrFailed()` |
+| Artifact | `upload-artifact` | `PublishPipelineArtifact@1` |
+
+Notes: each stage runs on a fresh agent, so dependencies are installed in both. The publish tasks use `succeededOrFailed()` so results appear even when tests fail, which is when they matter most. `TARGET_MODE` is a pipeline variable and reaches the scripts as an environment variable.
+
 ## Design decisions
 - **Skip vs fail:** an unreachable environment is a *skip* (guard fixture); a wrong result is a *fail*. This keeps failures meaningful.
 - **Central hook instead of decorators:** one place, covers fixtures, no behaviour change.
